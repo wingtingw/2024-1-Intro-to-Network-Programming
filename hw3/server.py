@@ -95,18 +95,6 @@ def game_owner(username, game_name):
                 return True
     return False
 
-def find_room_host(username):
-    for room_id, room_info in room_data.items():
-        if room_info["host"] == username:
-            return room_id
-    return None
-
-def find_room_part(username):
-    for room_id, room_info in room_data.items():
-        if room_info["participant"] == username:
-            return room_id
-    return None
-
 # -----------------server start----------------------
 def start():
     server_s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -294,7 +282,7 @@ def handle_start_game(client_s, username):
          
 def handle_change_game(client_s, username):
     room_id = client_s.recv(1024).decode('utf-8')
-    if not find_room_host(username) == username:
+    if not room_data[room_id]["host"] == username:
         client_s.send(b"chg-err")
     else:
         client_s.send(b"chg-g")
